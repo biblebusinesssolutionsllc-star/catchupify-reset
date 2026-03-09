@@ -1,443 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password - CatchUpify</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .logo h1 {
-            font-size: 28px;
-            color: #7C3AED;
-            margin-bottom: 4px;
-        }
-        
-        .logo p {
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        h2 {
-            color: #1f2937;
-            font-size: 24px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        
-        .subtitle {
-            color: #6b7280;
-            text-align: center;
-            margin-bottom: 32px;
-            font-size: 14px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            color: #374151;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .password-wrapper {
-            position: relative;
-        }
-        
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 14px 48px 14px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.2s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #7C3AED;
-        }
-        
-        .toggle-password {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .hint {
-            color: #9ca3af;
-            font-size: 12px;
-            margin-top: 6px;
-        }
-        
-        .error-text {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 6px;
-        }
-        
-        button[type="submit"] {
-            width: 100%;
-            padding: 16px;
-            background: #7C3AED;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 8px;
-        }
-        
-        button[type="submit"]:hover {
-            background: #6d28d9;
-        }
-        
-        button[type="submit"]:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-        
-        .success-container,
-        .error-container {
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-        }
-        
-        .success-icon svg {
-            width: 40px;
-            height: 40px;
-            color: white;
-        }
-        
-        .error-icon {
-            width: 80px;
-            height: 80px;
-            background: #ef4444;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-        }
-        
-        .error-icon svg {
-            width: 40px;
-            height: 40px;
-            color: white;
-        }
-        
-        .success-container h2 {
-            color: #10b981;
-        }
-        
-        .success-container p {
-            color: #6b7280;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
-        
-        .error-container h2 {
-            color: #ef4444;
-        }
-        
-        .error-container p {
-            color: #6b7280;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-top: 24px;
-            color: #7C3AED;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Password - CatchUpify</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .logo { font-size: 48px; margin-bottom: 10px; }
+    h1 { color: #7C3AED; font-size: 28px; margin-bottom: 5px; }
+    .tagline { color: #666; margin-bottom: 30px; }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    input:focus { outline: none; border-color: #7C3AED; }
+    button {
+      width: 100%;
+      padding: 16px;
+      background: #F97316;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover { background: #ea580c; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .message { margin-top: 20px; padding: 15px; border-radius: 10px; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .icon { font-size: 60px; margin-bottom: 20px; }
+    .error-icon { color: #dc3545; }
+    .success-icon { color: #28a745; }
+    a { color: #7C3AED; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .loading { opacity: 0.7; pointer-events: none; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>📡 CatchUpify</h1>
-            <p>Spontaneous Plans, Real Connections</p>
-        </div>
-        
-        <!-- Form State -->
-        <div id="form-state">
-            <h2>Reset Your Password</h2>
-            <p class="subtitle">Enter your new password below</p>
-            
-            <form id="reset-form">
-                <div class="form-group">
-                    <label for="password">New Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" placeholder="Enter new password" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('password')">Show</button>
-                    </div>
-                    <p class="hint">At least 8 characters</p>
-                    <p class="error-text hidden" id="password-error"></p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="confirm-password" placeholder="Confirm new password" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">Show</button>
-                    </div>
-                    <p class="error-text hidden" id="confirm-error"></p>
-                </div>
-                
-                <p class="error-text hidden" id="general-error"></p>
-                
-                <button type="submit" id="submit-btn">Update Password</button>
-            </form>
-        </div>
-        
-        <!-- Success State -->
-        <div id="success-state" class="success-container hidden">
-            <div class="success-icon">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <h2>Password Updated!</h2>
-            <p>Your password has been reset successfully. You can now log in with your new password in the CatchUpify app.</p>
-            <a href="https://www.catchupify.com" class="back-link">Back to Home</a>
-        </div>
-        
-        <!-- Error State (invalid/expired token) -->
-        <div id="error-state" class="error-container hidden">
-            <div class="error-icon">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </div>
-            <h2>Invalid Reset Link</h2>
-            <p id="error-message">This reset link is invalid or has expired. Please request a new password reset from the CatchUpify app.</p>
-            <a href="https://www.catchupify.com" class="back-link">Back to Home</a>
-        </div>
+  <div class="container" id="container">
+    <div class="logo">📡</div>
+    <h1>CatchUpify</h1>
+    <p class="tagline">Spontaneous Plans, Real Connections</p>
+    <div id="content">
+      <p>Loading...</p>
     </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://bnunsitykqhkyjslozrd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJudW5zaXR5a3Foa3lqc2xvenJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwODY3MjQsImV4cCI6MjA1NTY2MjcyNH0.0x6783SLjmPOvoZvSE6HBdX7Geox6rGwllzeMFRv4Sg';
     
-    <script>
-        // Initialize Supabase
-        const SUPABASE_URL = 'https://ynbhyhzygssjeswmjdxo.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluYmh5aHp5Z3NzamVzd21qZHhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NTkwMTksImV4cCI6MjA1ODQzNTAxOX0.H9WNigWnSyQMOBfvRC3WJz5S6Z8E8lj3rwpZ1ouIMPw';
-        
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // DOM elements
-        const formState = document.getElementById('form-state');
-        const successState = document.getElementById('success-state');
-        const errorState = document.getElementById('error-state');
-        const resetForm = document.getElementById('reset-form');
-        const passwordInput = document.getElementById('password');
-        const confirmInput = document.getElementById('confirm-password');
-        const submitBtn = document.getElementById('submit-btn');
-        const passwordError = document.getElementById('password-error');
-        const confirmError = document.getElementById('confirm-error');
-        const generalError = document.getElementById('general-error');
-        const errorMessage = document.getElementById('error-message');
-        
-        // Extract token from URL hash
-        async function init() {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const accessToken = params.get('access_token');
-            const type = params.get('type');
-            
-            console.log('Token type:', type);
-            console.log('Has access token:', !!accessToken);
-            
-            if (!accessToken || type !== 'recovery') {
-                showError('This reset link is invalid or has expired. Please request a new password reset from the CatchUpify app.');
-                return;
-            }
-            
-            try {
-                // Set the session with the recovery token
-                const { data, error } = await supabaseClient.auth.setSession({
-                    access_token: accessToken,
-                    refresh_token: accessToken
-                });
-                
-                if (error) {
-                    console.error('Session error:', error);
-                    showError('This reset link has expired. Please request a new password reset from the CatchUpify app.');
-                    return;
-                }
-                
-                console.log('Session set successfully');
-            } catch (err) {
-                console.error('Init error:', err);
-                showError('Something went wrong. Please request a new password reset from the CatchUpify app.');
-            }
-        }
-        
-        function showError(message) {
-            formState.classList.add('hidden');
-            successState.classList.add('hidden');
-            errorState.classList.remove('hidden');
-            errorMessage.textContent = message;
-        }
-        
-        function showSuccess() {
-            formState.classList.add('hidden');
-            errorState.classList.add('hidden');
-            successState.classList.remove('hidden');
-        }
-        
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const btn = input.nextElementSibling;
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = 'Hide';
-            } else {
-                input.type = 'password';
-                btn.textContent = 'Show';
-            }
-        }
-        
-        function validateForm() {
-            let isValid = true;
-            
-            // Reset errors
-            passwordError.classList.add('hidden');
-            confirmError.classList.add('hidden');
-            generalError.classList.add('hidden');
-            
-            // Check password length
-            if (passwordInput.value.length < 8) {
-                passwordError.textContent = 'Password must be at least 8 characters';
-                passwordError.classList.remove('hidden');
-                isValid = false;
-            }
-            
-            // Check passwords match
-            if (passwordInput.value !== confirmInput.value) {
-                confirmError.textContent = 'Passwords do not match';
-                confirmError.classList.remove('hidden');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-        
-        resetForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!validateForm()) return;
-            
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading"></span>Updating...';
-            generalError.classList.add('hidden');
-            
-            try {
-                const { data, error } = await supabaseClient.auth.updateUser({
-                    password: passwordInput.value
-                });
-                
-                if (error) {
-                    console.error('Update error:', error);
-                    generalError.textContent = error.message || 'Failed to update password. Please try again.';
-                    generalError.classList.remove('hidden');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Update Password';
-                    return;
-                }
-                
-                console.log('Password updated successfully');
-                showSuccess();
-                
-            } catch (err) {
-                console.error('Submit error:', err);
-                generalError.textContent = 'An error occurred. Please try again.';
-                generalError.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Update Password';
-            }
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const content = document.getElementById('content');
+
+    async function init() {
+      // Check for tokens in URL hash
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const type = params.get('type');
+      const error = params.get('error');
+      const errorDescription = params.get('error_description');
+
+      if (error) {
+        showError(errorDescription || 'An error occurred');
+        return;
+      }
+
+      if (type === 'recovery' && accessToken) {
+        // Set the session with the recovery token
+        const { data, error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
         });
-        
-        // Initialize on page load
-        init();
-    </script>
+
+        if (sessionError) {
+          showError('Invalid or expired reset link. Please request a new one.');
+          return;
+        }
+
+        showResetForm();
+      } else {
+        showError('Invalid reset link. Please request a new password reset from the CatchUpify app.');
+      }
+    }
+
+    function showResetForm() {
+      content.innerHTML = `
+        <form id="resetForm">
+          <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" id="password" placeholder="Enter new password" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" minlength="6" required>
+          </div>
+          <button type="submit" id="submitBtn">Reset Password</button>
+        </form>
+      `;
+
+      document.getElementById('resetForm').addEventListener('submit', handleReset);
+    }
+
+    async function handleReset(e) {
+      e.preventDefault();
+      
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Resetting...';
+
+      const { error } = await supabase.auth.updateUser({ password });
+
+      if (error) {
+        alert('Error: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Reset Password';
+        return;
+      }
+
+      showSuccess();
+    }
+
+    function showSuccess() {
+      content.innerHTML = `
+        <div class="icon success-icon">✓</div>
+        <h2 style="color: #28a745; margin-bottom: 15px;">Password Reset!</h2>
+        <p style="color: #666; margin-bottom: 25px;">Your password has been successfully updated. You can now log in with your new password.</p>
+        <a href="catchupify://login">Open CatchUpify App</a>
+      `;
+    }
+
+    function showError(message) {
+      content.innerHTML = `
+        <div class="icon error-icon">✕</div>
+        <h2 style="color: #dc3545; margin-bottom: 15px;">Invalid Reset Link</h2>
+        <p style="color: #666; margin-bottom: 25px;">${message}</p>
+        <a href="catchupify://">Back to App</a>
+      `;
+    }
+
+    init();
+  </script>
 </body>
 </html>
