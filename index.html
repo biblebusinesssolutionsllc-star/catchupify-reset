@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Password - CatchUpify</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -53,15 +52,11 @@
     }
     button:hover { background: #ea580c; }
     button:disabled { background: #ccc; cursor: not-allowed; }
-    .message { margin-top: 20px; padding: 15px; border-radius: 10px; }
-    .success { background: #d4edda; color: #155724; }
-    .error { background: #f8d7da; color: #721c24; }
     .icon { font-size: 60px; margin-bottom: 20px; }
     .error-icon { color: #dc3545; }
     .success-icon { color: #28a745; }
     a { color: #7C3AED; text-decoration: none; font-weight: 500; }
     a:hover { text-decoration: underline; }
-    .loading { opacity: 0.7; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -74,44 +69,55 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
     const SUPABASE_URL = 'https://czqlbtcnuvwzocphzojk.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cWxidGNudXZ3em9jcGh6b2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMTYyOTAsImV4cCI6MjA4NjY5MjI5MH0.Mko22ZSO-37G1lFgiR6Uc_11pvrAN4AIwpeMOR-Wpik';
     
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const content = document.getElementById('content');
 
     async function init() {
-      // Check for tokens in URL hash
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      
-      const accessToken = params.get('access_token');
-      const refreshToken = params.get('refresh_token');
-      const type = params.get('type');
-      const error = params.get('error');
-      const errorDescription = params.get('error_description');
+      try {
+        // Check for tokens in URL hash
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+        const type = params.get('type');
+        const error = params.get('error');
+        const errorDescription = params.get('error_description');
 
-      if (error) {
-        showError(errorDescription || 'An error occurred');
-        return;
-      }
+        console.log('Reset page loaded. Type:', type, 'Has token:', !!accessToken);
 
-      if (type === 'recovery' && accessToken) {
-        // Set the session with the recovery token
-        const { data, error: sessionError } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken
-        });
-
-        if (sessionError) {
-          showError('Invalid or expired reset link. Please request a new one.');
+        if (error) {
+          showError(errorDescription || 'An error occurred');
           return;
         }
 
-        showResetForm();
-      } else {
-        showError('Invalid reset link. Please request a new password reset from the CatchUpify app.');
+        if (type === 'recovery' && accessToken) {
+          // Set the session with the recovery token
+          const { data, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+
+          if (sessionError) {
+            console.error('Session error:', sessionError);
+            showError('This reset link has expired. Please request a new one from the app.');
+            return;
+          }
+
+          console.log('Session set successfully');
+          showResetForm();
+        } else {
+          showError('Invalid reset link. Please request a new password reset from the CatchUpify app.');
+        }
+      } catch (err) {
+        console.error('Init error:', err);
+        showError('Something went wrong. Please try again.');
       }
     }
 
@@ -120,7 +126,7 @@
         <form id="resetForm">
           <div class="form-group">
             <label for="password">New Password</label>
-            <input type="password" id="password" placeholder="Enter new password" minlength="6" required>
+            <input type="password" id="password" placeholder="Enter new password (min 6 characters)" minlength="6" required>
           </div>
           <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
@@ -153,16 +159,23 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Resetting...';
 
-      const { error } = await supabase.auth.updateUser({ password });
+      try {
+        const { error } = await supabase.auth.updateUser({ password });
 
-      if (error) {
-        alert('Error: ' + error.message);
+        if (error) {
+          alert('Error: ' + error.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Reset Password';
+          return;
+        }
+
+        showSuccess();
+      } catch (err) {
+        console.error('Reset error:', err);
+        alert('Error resetting password. Please try again.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Reset Password';
-        return;
       }
-
-      showSuccess();
     }
 
     function showSuccess() {
@@ -170,7 +183,7 @@
         <div class="icon success-icon">✓</div>
         <h2 style="color: #28a745; margin-bottom: 15px;">Password Reset!</h2>
         <p style="color: #666; margin-bottom: 25px;">Your password has been successfully updated. You can now log in with your new password.</p>
-        <a href="catchupify://login">Open CatchUpify App</a>
+        <p style="margin-top: 20px;"><a href="catchupify://">Open CatchUpify App</a></p>
       `;
     }
 
@@ -179,10 +192,11 @@
         <div class="icon error-icon">✕</div>
         <h2 style="color: #dc3545; margin-bottom: 15px;">Invalid Reset Link</h2>
         <p style="color: #666; margin-bottom: 25px;">${message}</p>
-        <a href="catchupify://">Back to App</a>
+        <p style="margin-top: 20px;"><a href="catchupify://">Back to App</a></p>
       `;
     }
 
+    // Run on page load
     init();
   </script>
 </body>
